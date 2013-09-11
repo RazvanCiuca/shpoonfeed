@@ -1,8 +1,10 @@
 <div class="row">
   <span class="col-md-4 col-sm-4 col-xs-4"></span>
   <span class="col-md-6 col-sm-6 col-xs-6">
-    <div id="befriend" class="ui-widget-header ui-droppable" style="height:150px;width:300px;">
-      Friends:
+    <div id="befriend" class="ui-widget-header ui-droppable friend-bucket">    
+      <div class="alert alert-success">
+        <strong>Friends:</strong> 
+      </div>
       <ul class="list-group">
         <% friends.each(function(user){ %>   
           <div class="ui-widget-content draggable draggable-friend" data-id="<%= user.escape('id') %>">         
@@ -13,8 +15,10 @@
     </div>
 
     <br/>
-    <div id="defriend" class="ui-widget-header ui-droppable" style="height:200px;width:300px;">
-      Potential Friends:
+    <div id="defriend" class="ui-widget-header ui-droppable friend-bucket">
+      <div class="alert alert-danger">
+        <strong>Not-Friends:</strong> 
+      </div>      
       <ul class="list-group">
         <% notfriends.each(function(user){ %>   
           <div class="ui-widget-content draggable draggable-stranger" data-id="<%= user.escape('id') %>">         

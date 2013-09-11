@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.14'
 
 gem 'pg'
-gem 'predictionio'
+gem 'figaro'
 
 gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails'
                              

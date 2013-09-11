@@ -14,6 +14,17 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   render: function() {    
     var renderedTemplate = this.template({users: this.collection });
     this.$el.html(renderedTemplate);
+    
+    function tick(){  
+      $('#ticker li:first').slideUp(function () { 
+        $(this).appendTo($('#ticker')).slideDown(); 
+      });
+    }
+  
+    //setInterval(function(){ tick () }, 2000);
+    
+    
+    
     return this;
   },
   
