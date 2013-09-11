@@ -24,11 +24,13 @@ Shpoonfeed.Views.AllUsers = Backbone.View.extend({
     });
     this.$el.html(renderedTemplate);
     
+    //Users to be befriended/defriended
     this.$el.find( ".draggable" ).draggable({ 
       axis: "y",
       revert: "invalid"
     });
     
+    //Stranger Bucket
     this.$el.find( "#defriend" ).droppable({
       accept: ".draggable-friend",
       drop: function( event, ui ) {
@@ -47,6 +49,8 @@ Shpoonfeed.Views.AllUsers = Backbone.View.extend({
         });
       }
     });
+    
+    //Friend Bucket
     this.$el.find( "#befriend" ).droppable({
       accept: ".draggable-stranger",
       drop: function( event, ui ) {
