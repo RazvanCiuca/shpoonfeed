@@ -1,0 +1,18 @@
+<div id="sign-up">
+  <div class="row">
+    <span class="col-md-5 col-sm-4 col-xs-3"></span>
+    <span class="col-md-6 col-sm-6 col-xs-6">
+      <h2> <%= message %> </h2>
+      
+      <form action="<%= path %>" method="post">
+        <label>Username: <br>
+          <input type="text" name="user[username]" value="<%= @user.username %>"> <br>
+        </label> <br>
+        <label>Password: <br>
+          <input type="password" name="user[password]"> <br>
+        </label> <br>
+        
+        <input type="submit" value="<%= message %>!">
+         
+      </form>
+    

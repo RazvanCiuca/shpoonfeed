@@ -1,0 +1,29 @@
+<div class="row">
+  <span class="col-md-4"></span>
+  <span class="col-md-6">
+    <div id="befriend" class="ui-widget-header ui-droppable" style="height:150px;width:300px;">
+      Friends:
+      <ul class="list-group">
+        <% friends.each(function(user){ %>   
+          <div class="ui-widget-content draggable draggable-friend" data-id="<%= user.escape('id') %>">         
+          <li class="list-group-item"><a><%= user.escape('username') %></a></li>
+          </div>
+        <% }) %> 
+      </ul> 
+    </div>
+
+    <br/>
+    <div id="defriend" class="ui-widget-header ui-droppable" style="height:200px;width:300px;">
+      Potential Friends:
+      <ul class="list-group">
+        <% notfriends.each(function(user){ %>   
+          <div class="ui-widget-content draggable draggable-stranger" data-id="<%= user.escape('id') %>">         
+          <li class="list-group-item"><a><%= user.escape('username') %></a></li>
+          </div>
+        <% }) %> 
+      </ul>
+    </div>
+  </span>
+</div>
+
+
