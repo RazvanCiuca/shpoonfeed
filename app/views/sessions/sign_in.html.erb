@@ -2,12 +2,13 @@
   render :partial => "layouts/login_form",
   :locals => { :message => "Sign In", :path => session_url }
 %>
-
 <br>
-Don't have an account?
-<%= button_to "Sign Up", new_user_url, :method => :get, :class =>"btn btn-primary" %>
-Or
 <%= button_to "Sign In with Facebook", "/auth/facebook", :method => :get, :class =>"btn btn-primary"%>
+<br>
+<center>Don't have an account?</center>
+<%= button_to "Sign Up", new_user_url, :method => :get, :class =>"btn btn-lg btn-success btn-block" %>
 
-  </span>
+
+
+  
 </div>
