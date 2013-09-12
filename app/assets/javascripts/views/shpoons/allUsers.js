@@ -26,7 +26,7 @@ Shpoonfeed.Views.AllUsers = Backbone.View.extend({
     
     //Users to be befriended/defriended
     this.$el.find( ".draggable" ).draggable({ 
-      axis: "y",
+      // axis: "y",
       revert: "invalid"
     });
     

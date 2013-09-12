@@ -9,33 +9,29 @@ Shpoonfeed.Routers.Shpoons = Backbone.Router.extend({
     this.$el = inits.$el;
     this.users = inits.users;
     this.friends = inits.friends;
+    this.notfriends = inits.notfriends;
+    this.aversions = inits.aversions;
   },
   
   showUser: function() {  
-      
-    var view = new Shpoonfeed.Views.UserHome({collection: this.friends});
+    var router = this;  
+    var view = new Shpoonfeed.Views.UserHome({
+      collection: router.friends,
+      aversions: router.aversions
+    });
     
-    this.$el.html(view.render().$el);
+    router.$el.html(view.render().$el);
   },
   
   showAllUsers: function() {   
-    var that = this;
-    var friends = new Shpoonfeed.Collections.Friends();
-    var notfriends = new Shpoonfeed.Collections.NotFriends();
-    friends.fetch({
-      success: function() {
-        notfriends.fetch({
-          success: function() {
-            var view = new Shpoonfeed.Views.AllUsers({
-              collection: that.users,
-              friends: friends,
-              notfriends: notfriends              
-            });
-            that.$el.html(view.render().$el);
-          }
-        });
-      }
-    });    
+    var router = this;
+   
+    var view = new Shpoonfeed.Views.AllUsers({
+      collection: router.users,
+      friends: router.friends,
+      notfriends: router.notfriends              
+    });
+    router.$el.html(view.render().$el);    
   }
  
   

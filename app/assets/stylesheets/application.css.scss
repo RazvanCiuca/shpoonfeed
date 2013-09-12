@@ -26,7 +26,19 @@
 //  background-color: #428BCA; 
 //}
  
+#reject-pile {
+  height:200px;
+  width:100%;
+} 
 
+#map-canvas {
+  height:300px;
+  width:100%;
+}
+
+.hidden {
+  display: none;
+}
 
 .draggable-friend {
   z-index: 9001;
@@ -34,7 +46,8 @@
 }
 
 .friend-bucket {
-  min-height:100px;
+  min-height:600px;
+  
   width:300px;
 }
 

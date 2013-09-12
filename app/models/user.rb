@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :friendships, :class_name => 'Friendship', :foreign_key => :buddy_id, :dependent => :destroy
   has_many :friends, :through => :friendships, :source => :buddy
   has_many :authorizations, :dependent => :destroy
+  has_many :aversions, :dependent => :destroy
   
   accepts_nested_attributes_for :authorizations
   
@@ -20,7 +21,7 @@ class User < ActiveRecord::Base
                       :authorizations_attributes => [{
                         :provider => "facebook",
                         :uid => uid
-                        }]
+                      }]
       )
       user.save
     end
@@ -47,5 +48,5 @@ class User < ActiveRecord::Base
     
     user.is_correct_password?(credentials[:password]) ? user : nil
   end
-  
+
 end
