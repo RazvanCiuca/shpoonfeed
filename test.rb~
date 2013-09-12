@@ -1,0 +1,6 @@
+require 'net/https'
+https = Net::HTTP.new('encrypted.google.com', 443)
+https.ca_path = "/usr/local/etc/openssl/cert.pem"
+https.use_ssl = true
+https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+https.request_get('/')

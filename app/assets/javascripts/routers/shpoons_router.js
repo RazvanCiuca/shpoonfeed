@@ -1,6 +1,7 @@
 Shpoonfeed.Routers.Shpoons = Backbone.Router.extend({
   routes: {
     "" : "showUser",
+    "_=_" : "showUser",
     "friends" : "showAllUsers"
   },
   

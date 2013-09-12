@@ -11,20 +11,34 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
     Backbone.history.navigate('friends',{trigger: true});
   },
   
-  render: function() {    
-    var renderedTemplate = this.template({users: this.collection });
+  initialize: function(inits) {
+    this.party = new Shpoonfeed.Collections.Party();
+    this.listenTo(this.party,"add remove", this.render);
+  },
+  
+  render: function() {   
+    var view = this; 
+    var renderedTemplate = this.template({
+      friends: this.collection,
+      party:this.party
+    });
     this.$el.html(renderedTemplate);
     
-    function tick(){  
-      $('#ticker li:first').slideUp(function () { 
-        $(this).appendTo($('#ticker')).slideDown(); 
-      });
-    }
-  
-    //setInterval(function(){ tick () }, 2000);
     
+    this.$el.find( ".draggable-friend" ).draggable({ 
+      revert: 'invalid',      
+      helper: 'clone'
+    });
     
-    
+    this.$el.find( "#add-to-party" ).droppable({
+      accept: ".draggable-friend",
+      drop: function( event, ui ) {
+        targetId = $(ui.draggable[0]).attr('data-id');
+        targetUser = view.collection.get(targetId);
+        view.party.add(targetUser);       
+      }
+    });
+      
     return this;
   },
   

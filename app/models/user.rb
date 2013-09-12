@@ -1,10 +1,31 @@
 class User < ActiveRecord::Base
-  attr_accessible :password, :username
+  attr_accessible :password, :username, :authorizations_attributes
   
   has_many :friendships, :class_name => 'Friendship', :foreign_key => :buddy_id, :dependent => :destroy
   has_many :friends, :through => :friendships, :source => :buddy
+  has_many :authorizations, :dependent => :destroy
   
+  accepts_nested_attributes_for :authorizations
   
+  def self.find_or_create_from_auth_hash(hash)
+    uid = hash[:uid]
+    name = hash[:info][:name]
+    authorization = Authorization.find_by_uid(uid)
+    
+    if authorization
+      user = authorization.user
+    else
+      user = User.new(:username => name,
+                      :password => SecureRandom.urlsafe_base64(10),
+                      :authorizations_attributes => [{
+                        :provider => "facebook",
+                        :uid => uid
+                        }]
+      )
+      user.save
+    end
+    return user
+  end  
   
   def password=(password)
     self.password_digest = BCrypt::Password.create(password)

@@ -17,6 +17,10 @@
 //.frendlist {
 //  height:300px;
 //}
+.draggable-friend {
+  z-index: 9001;
+  
+}
 
 .friend-bucket {
   min-height:100px;
@@ -24,11 +28,12 @@
 }
 
 #ticker {
-  height:100px;
-  overflow: scroll;
+  height:200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-#ticker li {
+#ticker a {
   height:50px;
 }
 
