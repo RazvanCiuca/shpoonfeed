@@ -6,8 +6,14 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   events: {
     "click #get-location" : "findFood",
     "click #more-friends" : "allUsers",
-    "click #toggle-map" : "toggleMap"
+    "click #toggle-map" : "toggleMap",
+    "click #toggle-directions" : "toggleDirections"
   }, 
+  
+  toggleDirections: function() {
+    console.log(this.$el.find('#directions-panel'))
+    this.$el.find('#directions-panel').toggleClass('hidden');
+  },
   
   toggleMap: function() {
     this.$el.find('#map-canvas').toggleClass('hidden');
@@ -41,7 +47,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   initialize: function(inits) {
     var view = this;
     this.aversions = new Shpoonfeed.Collections.Aversions();
-    this.mapHidden = "hidden";
+    this.mapHidden = "";
     this.aversions = inits.aversions;
     this.party = new Shpoonfeed.Collections.Party();
     this.listenTo(this.party,"add remove", this.reRender);
@@ -124,14 +130,30 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
         
     };
       
+    var suggestion = results[0];  
     view.$el.find('#results')
-      .append(view.suggestionTemplate({result: results[0]}));    
-    
+      .append(view.suggestionTemplate({result: suggestion}));   
     
     view.$el.find( ".nope" ).draggable({ 
       revert: 'invalid',    
     });
-   
+    
+    var request = {
+      origin: view.current_coords,
+      destination: suggestion.geometry.location,
+      travelMode: google.maps.TravelMode.WALKING,
+      provideRouteAlternatives: false
+    };
+    
+    var directionsDisplay = new google.maps.DirectionsRenderer();    
+    directionsDisplay.setMap(view.map);
+    var directionsService = new google.maps.DirectionsService();
+    directionsService.route(request, function(result, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(result);
+        directionsDisplay.setPanel(document.getElementById("directions-panel"));
+      }
+    });
     
    
     // for (var i = 0; i < results.length; i++) {  

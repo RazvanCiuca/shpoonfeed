@@ -9,10 +9,12 @@
       <li class="list-group-item">
         Rated <%= result.rating %> stars
       </li>
-      <li class="list-group-item">
-        Go to <%= result.formatted_address%>
-      </li>
-
+      <button id="toggle-directions" class="btn btn-warning btn-block">
+        Directions
+      </button>
+      <div id="directions-panel" class="hidden">
+        
+      </div>
     </ul>
   </div>
 </div>
