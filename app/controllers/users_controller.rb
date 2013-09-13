@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  include ApplicationHelper
-  
   
   
   def befriend

@@ -1,6 +1,7 @@
 Shpoonfeed.Views.UserHome = Backbone.View.extend({
 
   template: JST['shpoons/userShow'],
+  suggestionTemplate: JST['shpoons/suggestion'],
   
   events: {
     "click #get-location" : "findFood",
@@ -10,6 +11,11 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   
   toggleMap: function() {
     this.$el.find('#map-canvas').toggleClass('hidden');
+    if (this.mapHidden == "hidden") {
+      this.mapHidden = "";
+    } else {
+      this.mapHidden = "hidden";      
+    };
   },
   
   allUsers: function() {
@@ -17,6 +23,8 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   },
   
   initialize: function(inits) {
+    this.mapHidden = "hidden";
+    this.aversions = inits.aversions;
     this.party = new Shpoonfeed.Collections.Party();
     this.listenTo(this.party,"add remove", this.render);
   },
@@ -24,6 +32,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   render: function() {   
     var view = this; 
     var renderedTemplate = this.template({
+      mapHidden: this.mapHidden,
       friends: this.collection,
       party:this.party
     });
@@ -35,10 +44,23 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
     });
     
     view.$el.find( "#reject-pile" ).droppable({
-      accept: ".nope",
+      accept: function(elem){
+        if(elem.hasClass('nope')||elem.hasClass('draggable-friend')) {
+          return true;
+        };
+        return false;
+      },
       drop: function( event, ui ) {
-        targetRef = $(ui.draggable[0]).attr('data-reference');
-              
+        var target = $(ui.draggable[0])
+        if (target.hasClass('draggable-friend')){
+          console.log($(target[0]).attr('data-id'));
+          view.party.remove(view.party.get($(target[0]).attr('data-id')));
+        } else {
+          targetName = target.attr('data-name');
+          view.aversions.create({name: targetName});
+          view.render();
+          view.findFood();
+        }   
       }
     });
     
@@ -47,7 +69,8 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       drop: function( event, ui ) {
         targetId = $(ui.draggable[0]).attr('data-id');
         targetUser = view.collection.get(targetId);
-        view.party.add(targetUser);       
+        view.party.add(targetUser);   
+        view.$el.find('#get-location').html('Tell us where to eat!')    
       }
     });
       
@@ -55,10 +78,19 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   },
   
   suggestPlace: function(results, status, pagination){
+    var view = this;    
+    
+    results = results.filter(function(a){
+      return a.rating;
+    });
+    
+    results.sort(function(a,b){          
+      return (b.rating - a.rating);
+    });
+    
     var user_ids = [];
-    var view = this;
     this.party.each(function(user){
-      party.push(user.escape('id'));
+      user_ids.push(user.escape('id'));
     });
     
     $.ajax({
@@ -67,15 +99,25 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       data: { party: user_ids }
     }).done(function( banlist ) {
       for(var i=0;i < banlist.length;i++){
-        console.log(ban[i]);      
+        console.log(banlist[i]);
+        console.log('-------------');      
       }; 
-      for(var i=0;i < results.length;i++){
-        view.$el.find('#results')
-          .append("<div class='nope' data-reference='"+results[i].reference+"'>"+results[i].name+"</div><br>");    
-      }; 
+      for(var i=0;i < results.length;i++){        
+        if (banlist.indexOf(results[i].name) > -1) {
+          console.log(i,results[i].name);
+          results.splice(i,1);
+          i -= 1;
+        };
+        
+      };
+      
+      view.$el.find('#results')
+        .append(view.suggestionTemplate({result: results[0]}));    
+      
+      
       view.$el.find( ".nope" ).draggable({ 
         revert: 'invalid',      
-        // helper: 'clone'
+        
       });
       
       

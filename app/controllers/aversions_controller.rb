@@ -1,7 +1,7 @@
 class AversionsController < ApplicationController
-  include ApplicationHelper
+
   def create
-    @aversion = Aversion.new(:reference => params[:reference], :user_id => current_user.id)
+    @aversion = Aversion.new(:name => params[:name], :user_id => current_user.id)
     if @aversion.save
       render :json => @aversion
     else
@@ -16,7 +16,7 @@ class AversionsController < ApplicationController
     @user_ids.each do |user_id|
       user = User.find_by_id(user_id)
       user.aversions.each do |aversion|
-        @banlist << aversion.reference
+        @banlist << aversion.name
       end      
     end
     render :json => @banlist
