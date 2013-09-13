@@ -3,15 +3,20 @@
     <div class='row'>
       <% i = 5 %>
       <div class="col-md-<%= i %> col-sm-<%= i %> col-xs-<%= i %>">
-        <button id="get-location" class="btn btn-lg btn-success btn-block">Tell me where to eat!</button> 
-        <button id="toggle-map" class="btn btn-warning btn-block">Map</button>
+        
+        <button id="toggle-map" class="btn btn-lg btn-warning btn-block">Map</button>
         <br><div id="map-canvas" class="well <%= mapHidden %>"></div><br>
-        
+        <div id="reject-pile" class="well">
+          <img src="/trashcan.png" class="img-rounded" style="height:100%;width:100%;"> 
+        </div>
       </div>
-      <div id="results" class="col-md-<%= 12 - i %> col-sm-<%= 12 - i %> col-xs-<%= 12 - i %>">
+      <div class="col-md-<%= 12 - i %> col-sm-<%= 12 - i %> col-xs-<%= 12 - i %>">
+        <button id="get-location" class="btn btn-lg btn-success btn-block">Tell me where to eat!</button> <br>
+        <div id="results">
         
-        
+        </div>
       </div>
+      
     </div>
   </div>
   
@@ -65,10 +70,7 @@
                  
       </a>     
     </div>
-    <div id="reject-pile" class="well">
-      <img src="/trashcan.png" class="img-rounded" style="height:100%;width:100%;">
-      
-    </div>
+    
     
   </div>
 </div>

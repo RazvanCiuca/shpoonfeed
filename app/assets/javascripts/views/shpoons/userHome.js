@@ -132,10 +132,11 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       
     var suggestion = results[0];  
     view.$el.find('#results')
-      .append(view.suggestionTemplate({result: suggestion}));   
+      .html(view.suggestionTemplate({result: suggestion}));   
     
     view.$el.find( ".nope" ).draggable({ 
-      revert: 'invalid',    
+      helper: 'clone',
+      revert: 'invalid'    
     });
     
     var request = {
