@@ -5,7 +5,7 @@ class RootController < ApplicationController
       redirect_to user_url(current_user)
     else
       @user = User.new
-      render "session/sign_in"
+      render "sessions/sign_in"
     end
   end
 end
