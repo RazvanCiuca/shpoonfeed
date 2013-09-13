@@ -1,15 +1,18 @@
-<div class='nope' data-name='<%= result.name %>'>
+<div class="nope" data-name="<%= result.name %>">
   
   
   <div class="panel panel-info">
     <div class="panel-heading">
-      <strong>A Feast Awaits You at:<h3> <%= result.name %></h3></strong>
+      <strong>A Feast Awaits You at:<h4> <%= result.name %></h4></strong>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
-        <%= result.rating %>
+        Rated <%= result.rating %> stars
       </li>
-    
+      <li class="list-group-item">
+        Go to <%= result.formatted_address%>
+      </li>
+
     </ul>
   </div>
 </div>

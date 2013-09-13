@@ -16,7 +16,7 @@ class AversionsController < ApplicationController
     @user_ids.each do |user_id|
       user = User.find_by_id(user_id)
       user.aversions.each do |aversion|
-        @banlist << aversion.name
+        @banlist << {:name => aversion.name}
       end      
     end
     render :json => @banlist

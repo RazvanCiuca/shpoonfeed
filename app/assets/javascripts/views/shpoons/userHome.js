@@ -22,11 +22,38 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
     Backbone.history.navigate('friends',{trigger: true});
   },
   
+  reRender: function() {
+    var view = this;
+    var user_ids = [];
+    this.party.each(function(user){
+      user_ids.push(user.escape('id'));
+    });   
+    this.aversions.fetch({
+      data:{ party: user_ids },
+      success: function() {
+        view.render();
+        view.findFood();
+      }
+    });
+    
+  },
+  
   initialize: function(inits) {
+    var view = this;
+    this.aversions = new Shpoonfeed.Collections.Aversions();
     this.mapHidden = "hidden";
     this.aversions = inits.aversions;
     this.party = new Shpoonfeed.Collections.Party();
-    this.listenTo(this.party,"add remove", this.render);
+    this.listenTo(this.party,"add remove", this.reRender);
+    
+    var user_ids = [];
+    this.party.each(function(user){
+      user_ids.push(user.escape('id'));
+    });   
+    this.aversions.fetch({
+      data:{ party: user_ids }
+    });
+    
   },
   
   render: function() {   
@@ -52,8 +79,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       },
       drop: function( event, ui ) {
         var target = $(ui.draggable[0])
-        if (target.hasClass('draggable-friend')){
-          console.log($(target[0]).attr('data-id'));
+        if (target.hasClass('draggable-friend')) {
           view.party.remove(view.party.get($(target[0]).attr('data-id')));
         } else {
           targetName = target.attr('data-name');
@@ -70,7 +96,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
         targetId = $(ui.draggable[0]).attr('data-id');
         targetUser = view.collection.get(targetId);
         view.party.add(targetUser);   
-        view.$el.find('#get-location').html('Tell us where to eat!')    
+        view.$el.find('#get-location').html('Tell us where to eat!');  
       }
     });
       
@@ -79,7 +105,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   
   suggestPlace: function(results, status, pagination){
     var view = this;    
-    
+    console.log(results);
     results = results.filter(function(a){
       return a.rating;
     });
@@ -88,41 +114,24 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       return (b.rating - a.rating);
     });
     
-    var user_ids = [];
-    this.party.each(function(user){
-      user_ids.push(user.escape('id'));
-    });
-    
-    $.ajax({
-      type: "GET",
-      url: "/aversions",
-      data: { party: user_ids }
-    }).done(function( banlist ) {
-      for(var i=0;i < banlist.length;i++){
-        console.log(banlist[i]);
-        console.log('-------------');      
-      }; 
-      for(var i=0;i < results.length;i++){        
-        if (banlist.indexOf(results[i].name) > -1) {
-          console.log(i,results[i].name);
-          results.splice(i,1);
-          i -= 1;
-        };
         
+    for(var i=0;i < results.length;i++){        
+      if (view.aversions.pluck('name').indexOf(results[i].name) > -1) {
+        console.log(i,results[i].name);
+        results.splice(i,1);
+        i -= 1;
       };
-      
-      view.$el.find('#results')
-        .append(view.suggestionTemplate({result: results[0]}));    
-      
-      
-      view.$el.find( ".nope" ).draggable({ 
-        revert: 'invalid',      
         
-      });
+    };
       
-      
-         
+    view.$el.find('#results')
+      .append(view.suggestionTemplate({result: results[0]}));    
+    
+    
+    view.$el.find( ".nope" ).draggable({ 
+      revert: 'invalid',    
     });
+   
     
    
     // for (var i = 0; i < results.length; i++) {  
@@ -130,7 +139,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
   //       
   //       service.getDetails({reference: results[i].reference}, function(place,status){
   //         if (status == google.maps.places.PlacesServiceStatus.OK) {
-  //           currentView.createMarker(place, map);
+  //           view.createMarker(place, map);
   //           console.log(place.name);
   //         }            
   //       })      
@@ -156,17 +165,17 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       alert('Your shitty browser can\'t handle geolocation');
     };
     
-    var currentView = this;
+    var view = this;
     
     function showMap(position) {
       lat = position.coords.latitude;
       lon = position.coords.longitude;
-      currentView.current_coords = new google.maps.LatLng(lat, lon);
+      view.current_coords = new google.maps.LatLng(lat, lon);
 
       var map = null;
       var service = null;
       
-      currentView.initializeMap();
+      view.initializeMap();
     };
   },
   
@@ -185,17 +194,18 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       location: this.current_coords,
       openNow: true,
       radius: 425, 
-      types: ["restaurant","food"],
+      query: "restaurant",
+      // types: ["restaurant","food"],
       // rankBy: google.maps.places.RankBy.DISTANCE,
       minPriceLevel: 1,
       maxPriceLevel: 1
     };
     var map = this.map
-    var currentView = this;
+    var view = this;
     service = new google.maps.places.PlacesService(map);
-    map.panTo(currentView.current_coords);
+    map.panTo(view.current_coords);
     
-    service.nearbySearch(request, currentView.suggestPlace.bind(currentView));
+    service.textSearch(request, view.suggestPlace.bind(view));
   },
       
   createMarker: function(place) {
