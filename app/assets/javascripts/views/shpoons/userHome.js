@@ -69,7 +69,11 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       friends: this.collection,
       party:this.party
     });
-    view.$el.html(renderedTemplate);    
+    view.$el.html(renderedTemplate); 
+       
+    if (view.party.length > 0) {
+      view.$el.find('#get-location').html('Tell us where to eat!');
+    };
     
     view.$el.find( ".draggable-friend" ).draggable({ 
       revert: 'invalid',      
@@ -102,7 +106,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
         targetId = $(ui.draggable[0]).attr('data-id');
         targetUser = view.collection.get(targetId);
         view.party.add(targetUser);   
-        view.$el.find('#get-location').html('Tell us where to eat!');  
+          
       }
     });
       
