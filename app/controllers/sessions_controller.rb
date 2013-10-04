@@ -18,7 +18,7 @@ class SessionsController < ApplicationController
       login!(@user)
       redirect_to user_url(@user)
     else
-      @errors = @user.errors.full_messages
+      @errors = "Your username and password combination is not valid. Try again!"
       render :sign_in
     end
   end

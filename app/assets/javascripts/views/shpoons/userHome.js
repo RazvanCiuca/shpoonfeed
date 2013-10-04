@@ -7,12 +7,21 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
     "click #get-location" : "findFood",
     "click #more-friends" : "allUsers",
     "click #toggle-map" : "toggleMap",
-    "click #toggle-directions" : "toggleDirections"
+    "click #toggle-directions" : "toggleDirections",
+    "click #not-today" : "notToday"
   }, 
+  
+  notToday: function(event) {
+    targetName = $(event.currentTarget).attr('data-name');
+    this.aversions.add({name: targetName});
+    this.render();
+    this.findFood();
+  },
   
   toggleDirections: function() {
     console.log(this.$el.find('#directions-panel'))
     this.$el.find('#directions-panel').toggleClass('hidden');
+    $(".adp-warnbox").addClass("hidden");
   },
   
   toggleMap: function() {
@@ -157,7 +166,10 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       if (status == google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(result);
         directionsDisplay.setPanel(document.getElementById("directions-panel"));
+        
+        
       }
+      
     });
     
    
@@ -225,7 +237,7 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
       // types: ["restaurant","food"],
       // rankBy: google.maps.places.RankBy.DISTANCE,
       minPriceLevel: 1,
-      maxPriceLevel: 1
+      maxPriceLevel: 3
     };
     var map = this.map
     var view = this;
