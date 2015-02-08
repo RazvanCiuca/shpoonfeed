@@ -7,7 +7,7 @@ gem 'figaro'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails'
-                             
+gem 'json', '1.8.2'                            
 
 group :development do
   gem 'better_errors'

@@ -232,12 +232,12 @@ Shpoonfeed.Views.UserHome = Backbone.View.extend({
     var request = {
       location: this.current_coords,
       openNow: true,
-      radius: 425, 
+      radius: 1000, 
       query: "restaurant",
       // types: ["restaurant","food"],
       // rankBy: google.maps.places.RankBy.DISTANCE,
-      minPriceLevel: 1,
-      maxPriceLevel: 3
+      minPriceLevel: 0,
+      maxPriceLevel: 4
     };
     var map = this.map
     var view = this;
